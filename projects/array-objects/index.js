@@ -41,10 +41,9 @@ function map(array, fn) {
    reduce([1, 2, 3], (all, current) => all + current) // 6
  */
 function reduce(array, fn, initial) {
-  let sum = array[0] + initial ? initial : 0;
-  for (let i = 0; i < array.length; i++) {
-    fn(sum, array[i], i, array);
-    sum += array[i];
+  let sum = initial ? initial : array[0];
+  for (let i = initial ? 0 : 1; i < array.length; i++) {
+    sum = fn(sum, array[i], i, array);
   }
   return sum;
 }
@@ -82,6 +81,7 @@ function createProxy(obj) {
     {
       set: function (obj, prop, value) {
         obj[prop] = value * value;
+        return true;
       },
     }
   );
