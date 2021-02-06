@@ -39,8 +39,26 @@ const homeworkContainer = document.querySelector('#app');
  Массив городов пожно получить отправив асинхронный запрос по адресу
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
-function loadTowns() {}
-
+function loadTowns() {
+    return new Promise((resolve, reject) => {
+        let lol = fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json')
+            .then(response => response.json())
+            .then(commits => {
+                let arr = commits;
+                arr.sort(function (a, b) {
+                    if (a.name > b.name) {
+                        return 1;
+                    }
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    return 0;
+                });
+                resolve(arr);
+            });
+    });
+}
+let arrloadTowns = loadTowns().then(data => console.log(data))
 /*
  Функция должна проверять встречается ли подстрока chunk в строке full
  Проверка должна происходить без учета регистра символов
@@ -52,7 +70,13 @@ function loadTowns() {}
    isMatching('Moscow', 'SCO') // true
    isMatching('Moscow', 'Moscov') // false
  */
-function isMatching(full, chunk) {}
+function isMatching(full, chunk) {
+    if (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 /* Блок с надписью "Загрузка" */
 const loadingBlock = homeworkContainer.querySelector('#loading-block');
