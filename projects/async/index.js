@@ -30,7 +30,7 @@
  */
 
 import './towns.html';
-
+import { loadAndSortTowns } from './functions';
 const homeworkContainer = document.querySelector('#app');
 
 /*
@@ -40,25 +40,8 @@ const homeworkContainer = document.querySelector('#app');
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
 function loadTowns() {
-    return new Promise((resolve, reject) => {
-        let lol = fetch('https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json')
-            .then(response => response.json())
-            .then(commits => {
-                let arr = commits;
-                arr.sort(function (a, b) {
-                    if (a.name > b.name) {
-                        return 1;
-                    }
-                    if (a.name < b.name) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                resolve(arr);
-            });
-    });
+    return loadAndSortTowns();
 }
-let arrloadTowns = loadTowns().then(data => console.log(data))
 /*
  Функция должна проверять встречается ли подстрока chunk в строке full
  Проверка должна происходить без учета регистра символов
@@ -91,8 +74,34 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
-retryButton.addEventListener('click', () => {});
+let towns = [];
+// setInterval(()=> console.log(towns), 500)
+loadingFailedBlock.classList.add('hidden');
+filterBlock.classList.add('hidden');
 
-filterInput.addEventListener('input', function () {});
+retryButton.addEventListener('click', () => {
+    load();
+});
 
+filterInput.addEventListener('input', function (e) {
+    filterResult.innerHTML = '';
+    let showCurentTown = towns.filter(town => isMatching(town.name, e.target.value) );
+    let newTownList = '';
+    showCurentTown.forEach( (element) => newTownList += `<li>${element.name}</li>`)
+    filterResult.innerHTML = newTownList;
+});
+
+async function load(){
+    // console.log('stert town')
+    try {
+        towns = await loadTowns();
+        loadingBlock.classList.add('hidden');
+        loadingFailedBlock.classList.add('hidden');
+        filterBlock.classList.remove('hidden');
+    } catch (e) {
+        loadingBlock.classList.add('hidden');
+        loadingFailedBlock.classList.remove('hidden');
+    }
+}
+load();
 export { loadTowns, isMatching };

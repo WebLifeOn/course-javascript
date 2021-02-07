@@ -12,7 +12,7 @@ function delayPromise(seconds) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve('foo');
-        }, 3000);
+        }, seconds * 1000);
     });
 }
 
@@ -45,7 +45,8 @@ function loadAndSortTowns() {
                     return 0;
                 });
                 resolve(arr);
-            });
+            })
+            .catch(err => reject(err));
     });
 }
 
