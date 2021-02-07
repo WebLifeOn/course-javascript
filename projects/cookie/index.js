@@ -68,3 +68,17 @@ showCooToHtml()
 listTable.addEventListener('click', (e) => {
 
 });
+
+// получение всех куков в объект
+function getCookies(){
+    if(!document.cookie || document.cookie.length<2) return {};
+
+    var res = {}, coo,
+        cArr = document.cookie.split(/;\s?/);
+    for (var i = 0; i < cArr.length; i++) {
+        coo = cArr [i].split('=');
+        res[coo[0]] = decodeURIComponent(coo[1]);
+    }
+    return res;
+};
+var cObj = getCookies();
