@@ -19,8 +19,13 @@ import './dnd.html';
 
 const homeworkContainer = document.querySelector('#app');
 
-document.addEventListener('mousemove', (e) => {
-});
+// document.addEventListener('mousemove', (e) => {});
+function getRandomArbitrary(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
+}
+function randomColor(){
+  return Math.floor(Math.random()*16777215).toString(16);
+}
 var dragObj = null; //object to be moved
 var xOffset = 0; //used to prevent dragged object jumping to mouse location
 var yOffset = 0;
@@ -69,7 +74,7 @@ export function createDiv() {
   element.setAttribute("draggable", "true");
   element.classList.add("draggable-div");
   element.setAttribute("id", "menuBar");
-  element.setAttribute("style", "background:red; border: 1px solid blue; width: 200px; height: 200px");
+  element.setAttribute("style", `background:#${randomColor()}; border: ${getRandomArbitrary(1, 3)}px solid blue; width: ${getRandomArbitrary(100, 200)}px; height: ${getRandomArbitrary(100, 200)}px; left:${getRandomArbitrary(0, document.documentElement.clientWidth - 200)}px; top: ${getRandomArbitrary(0, document.documentElement.clientHeight - 200)}px`);
   element.addEventListener("mousedown", startDrag, true);
   return element;
 }
