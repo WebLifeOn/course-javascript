@@ -45,29 +45,60 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
-filterNameInput.addEventListener('input', function () {});
+filterNameInput.addEventListener('input', function () {
+    showCooToHtml(filter());
+});
 
 addButton.addEventListener('click', () => {
     if( addNameInput.value.trim() != '' && addValueInput.value.trim() != ''){
         document.cookie = `${addNameInput.value.trim()}=${addValueInput.value.trim()}`;
-        addNameInput.value = '';
-        addValueInput.value = '';
+        showCooToHtml(filter());
     }
 
 });
-
-function showCooToHtml(){
-    // const parts = document.cookie.split(`;`);
-    // console.log(parts);
-    var getting = browser.cookies.get(
-        details                // object
-    )
-    console.log(getting);
+function filter(){
+    var cObj = getCookies();
+    for(let item in cObj){
+        if( !item.includes(filterNameInput.value) &&  !cObj[item].includes(filterNameInput.value) ){
+                delete cObj[item]
+        }
+    }
+    return cObj;
 }
-showCooToHtml()
-listTable.addEventListener('click', (e) => {
 
-});
+function showCooToHtml(cObj){
+    clearTable();
+    var fragment = document.createDocumentFragment();
+    for (let item in cObj) {
+        let tr = document.createElement('tr'),
+            row1 = document.createElement('td'),
+            row2 = document.createElement('td'),
+            row3 = document.createElement('td'),
+            btn = document.createElement('button');
+
+        row1.textContent = item;
+        row2.textContent = cObj[item];
+        btn.textContent = 'delete';
+        btn.setAttribute('data-key', item);
+        btn.addEventListener("click", delCurCookies);
+        row3.append(btn);
+
+        tr.append(row1);
+        tr.append(row2);
+        tr.append(row3);
+        fragment.append(tr);
+    }
+    listTable.append(fragment);
+}
+showCooToHtml(getCookies())
+
+function delCurCookies(e){
+    this.closest('tr').remove();
+    document.cookie = `${this.dataset.key}=John; max-age=0`;
+}
+// listTable.addEventListener('click', (e) => {
+//
+// });
 
 // получение всех куков в объект
 function getCookies(){
@@ -81,4 +112,8 @@ function getCookies(){
     }
     return res;
 };
-var cObj = getCookies();
+
+function clearTable(){
+    listTable.innerHTML = '';
+}
+
