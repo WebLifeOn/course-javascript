@@ -59,8 +59,10 @@ addButton.addEventListener('click', () => {
 function filter(){
     var cObj = getCookies();
     for(let item in cObj){
+        console.log(`item ${item}:` + !item.includes(filterNameInput.value), `cObj ${cObj[item]}:` + !cObj[item].includes(filterNameInput.value))
         if( !item.includes(filterNameInput.value) &&  !cObj[item].includes(filterNameInput.value) ){
-                delete cObj[item]
+            delete cObj[item]
+
         }
     }
     return cObj;
